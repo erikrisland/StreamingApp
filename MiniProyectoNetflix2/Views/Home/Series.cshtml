@@ -1,0 +1,55 @@
+﻿@model List<Application.ViewModels.SaveSerieViewModel>
+@{
+
+	ViewData["Title"] = "Mantenimiento de series";
+}
+
+<div class="container-fluid">
+    <div class="col-4 pb-2">
+        <a asp-controller="Serie" asp-action="Create" class="btn btn-outline-success">Crear nueva serie</a>
+    </div>
+
+    <h3>Series</h3>
+
+    <div class="row">
+        @if (Model == null || Model.Count == 0)
+        {
+            <h2>No hay series</h2>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-3" style="margin-bottom: 10px;">
+                    <div class="card shadow-sm">
+                        <img class="bd-placeholder-img card-img-top img-serie-size" src="@item.ImagenUrl" />
+                        <div class="card-body" style="height: 260px;">
+                            <h4>@item.Nombre</h4>
+                            <div>
+                                <small class="fw-bold fs-6">Productora:</small>
+                                <p class="card-text">
+                                    @item.ProductorasDisponibles.FirstOrDefault(p => p.Id == item.ProductoraId)?.Nombre
+                                </p>
+                                <small class="fw-bold fs-6">Género:</small>
+                                <p class="card-text">
+                                    <strong>@item.GenerosDisponibles.FirstOrDefault(g => g.Id == item.GeneroId)?.Nombre</strong>
+                                    @{
+                                        var subGenero = item.GenerosDisponibles.FirstOrDefault(g => g.Id == item.SubGeneroId)?.Nombre;
+                                        if (!string.IsNullOrEmpty(subGenero))
+                                        {
+                                            <strong>@subGenero</strong>
+                                        }
+                                    }
+                                </p>
+                            </div>
+                            <div class="btn-group" style="padding-top: 15px;">
+                                <a asp-controller="Serie" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sn btn-outline-warning">Editar</a>
+                                <a asp-controller="Serie" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sn btn-outline-danger">Eliminar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

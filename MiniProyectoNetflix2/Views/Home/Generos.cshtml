@@ -1,0 +1,44 @@
+﻿@model List<Application.ViewModels.GeneroViewModel>
+@{
+
+	ViewData["Title"] = "Mantenimiento de géneros";
+}
+
+<div class="container-fluid">
+
+	<div class="col-4 pb-2">
+		<a asp-controller="Genero" asp-action="Create" class="btn btn-outline-success">Crear nuevo género</a>
+	</div>
+
+	<h3>Lista de géneros</h3>
+
+	<div class="row">
+
+		@if (Model == null || Model.Count == 0)
+		{
+			<h2>No hay géneros</h2>
+		}
+
+		else
+		{
+
+			@foreach (Application.ViewModels.GeneroViewModel item in Model)
+			{
+				<div class="col-12">
+					<div class="card shadow-sm">
+						<div class="card-body">
+							<h6>Nombre de género:</h6>
+							<h4>@item.Nombre</h4>
+
+							<div class="btn-group">
+								<a asp-controller="Genero" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sn btn-outline-warning">Editar</a>
+								<a asp-controller="Genero" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sn btn-outline-danger">Eliminar</a>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			}
+		}
+	</div>
+</div>

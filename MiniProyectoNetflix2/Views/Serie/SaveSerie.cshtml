@@ -1,0 +1,78 @@
+﻿@model Application.ViewModels.SaveSerieViewModel
+
+@{
+	bool editMode = Model.Id == 0 ? false : true;
+	ViewData["Title"] = editMode ? "Editar serie" : "Crear serie";
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-dark text-light">
+                    <h4>@(editMode ? $"Editando serie: {Model.Nombre}" : "Creando una nueva serie")</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-controller="Serie" asp-action="@(editMode ? "Edit" : "Create")">
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label">Nombre: </label>
+                            <input type="text" asp-for="Nombre" class="form-control" maxlength="30">
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="GeneroId" class="form-label">Género: </label>
+                            <select asp-for="GeneroId" class="form-select">
+                                <option value="">Seleccione una opción</option>
+                                @foreach (var genero in Model.GenerosDisponibles)
+                                {
+                                    <option value="@genero.Id">@genero.Nombre</option>
+                                }
+                            </select>
+                            <span asp-validation-for="GeneroId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SubGeneroId" class="form-label">Subgénero (Opcional): </label>
+                            <select asp-for="SubGeneroId" class="form-select">
+                                <option value="">Seleccione una opción</option>
+                                @foreach (var genero in Model.GenerosDisponibles)
+                                {
+                                    <option value="@genero.Id">@genero.Nombre</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ProductoraId" class="form-label">Productora: </label>
+                            <select asp-for="ProductoraId" class="form-select">
+                                <option value="">Seleccione una opción</option>
+                                @foreach (var productora in Model.ProductorasDisponibles)
+                                {
+                                    <option value="@productora.Id">@productora.Nombre</option>
+                                }
+                            </select>
+                            <span asp-validation-for="ProductoraId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImagenUrl" class="form-label">Link URL de la imagen: </label>
+                            <input type="text" asp-for="ImagenUrl" class="form-control">
+                            <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LinkVideo" class="form-label">Link URL del video: </label>
+                            <input type="text" asp-for="LinkVideo" class="form-control">
+                            <span asp-validation-for="LinkVideo" class="text-danger"></span>
+                        </div>
+
+                        <input type="hidden" asp-for="Id" />
+
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a asp-controller="Home" asp-action="Series" class="btn btn-warning">Volver atrás</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

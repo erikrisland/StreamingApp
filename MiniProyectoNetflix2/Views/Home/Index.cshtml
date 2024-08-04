@@ -1,0 +1,100 @@
+﻿@model List<Application.ViewModels.SaveSerieViewModel>
+@{
+
+    ViewData["Title"] = "Home";
+}
+
+<div class="row">
+    <form asp-controller="Home" asp-action="Index" method="get" class="col-12 mb-3">
+        <div class="input-group mb-3">
+            <input type="text" name="searchString" class="form-control" placeholder="Buscar series por nombre" value="@ViewData["CurrentFilter"]" />
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </div>
+
+        <div class="row align-items-end mb-3">
+            <div class="col-md-4 mr-2">
+                <label for="productoraFilter" class="form-label">Filtrar por Productora</label>
+                <select class="form-select" name="productoraFilter" id="productoraFilter">
+                    <option value="">Seleccione una productora</option>
+                    @if (ViewBag.Productoras != null)
+                    {
+                        foreach (var productora in ViewBag.Productoras)
+                        {
+                            <option value="@productora.Id">@productora.Nombre</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-4 mx-2">
+                <label class="form-label">Filtrar por Género</label><br />
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Seleccione uno o más géneros
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                        @if (ViewBag.Generos != null)
+                        {
+                            foreach (var genero in ViewBag.Generos)
+                            {
+                                <li>
+                                    <div class="form-check" style="margin-left: 10px;">
+                                        <input class="form-check-input" type="checkbox" name="generoFilter" value="@genero.Id" id="genero-@genero.Id">
+                                        <label class="form-check-label" for="genero-@genero.Id">@genero.Nombre</label>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-2 ml-2">
+                <button class="btn btn-warning" type="submit">Filtrar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+    <h3>Home</h3>
+
+    <div class="row">
+        @if (Model == null || Model.Count == 0)
+        {
+            <h2>No hay series</h2>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+            <div class="col-3" style="margin-bottom: 10px;">
+                <div class="card shadow-sm">
+                    <img class="bd-placeholder-img card-img-top img-serie-size" src="@item.ImagenUrl" />
+                    <div class="card-body" style="height: 260px;">
+                            <h4>@item.Nombre</h4>
+                            <div>
+                                <small class="fw-bold fs-6">Productora:</small>
+                                <p class="card-text">
+                                    @item.ProductorasDisponibles.FirstOrDefault(p => p.Id == item.ProductoraId)?.Nombre
+                                </p>
+                                <small class="fw-bold fs-6">Género:</small>
+                                <p class="card-text">
+                                    <strong>@item.GenerosDisponibles.FirstOrDefault(g => g.Id == item.GeneroId)?.Nombre</strong>
+                                @{
+                                    var subGenero = item.GenerosDisponibles.FirstOrDefault(g => g.Id == item.SubGeneroId)?.Nombre;
+                                    if (!string.IsNullOrEmpty(subGenero))
+                                    {
+                                        <strong>@subGenero</strong>
+                                    }
+                                }
+                                </p>
+                            </div>
+                            <div class="btn-group" style="padding-top: 15px;">
+                                <a asp-controller="Serie" asp-action="Detalles" asp-route-id="@item.Id" class="btn btn-sn btn-outline-warning">Detalles</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>

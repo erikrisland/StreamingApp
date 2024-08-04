@@ -1,0 +1,39 @@
+﻿@model Application.ViewModels.SaveSerieViewModel
+
+@{
+    ViewData["Title"] = "Detalles de la serie";
+
+    Func<string, string> ObtenerIdVideoYoutube = linkYoutube =>
+    {
+
+        if (!string.IsNullOrWhiteSpace(linkYoutube) && linkYoutube.Contains("youtube.com/watch?v="))
+        {
+
+            int indiceInicio = linkYoutube.IndexOf("watch?v=") + "watch?v=".Length;
+            int indiceFin = linkYoutube.IndexOf('&', indiceInicio);
+
+            if (indiceFin != -1)
+            {
+                return linkYoutube.Substring(indiceInicio, indiceFin - indiceInicio);
+            }
+            else
+            {
+                return linkYoutube.Substring(indiceInicio);
+            }
+        }
+
+        return string.Empty;
+    };
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-warning">Volver atras</a>
+
+<h1>@Model.Nombre</h1>
+
+@{
+    string idVideo = ObtenerIdVideoYoutube(Model.LinkVideo);
+}
+
+<div>
+    <iframe width="860" height="615" src="https://www.youtube.com/embed/@idVideo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
